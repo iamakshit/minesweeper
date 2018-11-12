@@ -1,7 +1,13 @@
 package com.java.component;
 
+import com.java.component.common.Constants;
 import com.java.component.common.CustomException;
+import com.java.component.common.CustomException.ErrorCodes;
 
+/**
+ * @author akshitgupta
+ *
+ */
 public class Grid {
 
 	private static Cell[][] cells;
@@ -19,6 +25,10 @@ public class Grid {
 
 	/******************************************************************/
 
+	/***
+	 * 
+	 * Checks if the game is over
+	 **/
 	public static void isGameOver() {
 		int remainingCellsCount = 0;
 		for (int i = 0; i < cells.length; i++) {
@@ -29,7 +39,7 @@ public class Grid {
 			}
 		}
 		if (remainingCellsCount == B) {
-			System.out.println(" You won the game congrats");
+			System.out.println(Constants.GAME_WON);
 			System.exit(0);
 		}
 
@@ -37,6 +47,9 @@ public class Grid {
 
 	/******************************************************************/
 
+	/***
+	 * Initial board setup
+	 */
 	public static Grid setUpBoard(int N, int B) throws CustomException {
 		validateSetupBoardInputs(N, B);
 		if (gridInstance == null) {
@@ -48,6 +61,9 @@ public class Grid {
 
 	/******************************************************************/
 
+	/***
+	 * Resets the board after every game
+	 */
 	public void resetBoard() {
 		Grid.cells = new Cell[N][N];
 		initializeCells();
@@ -57,7 +73,7 @@ public class Grid {
 
 	public static void validateSetupBoardInputs(int N, int B) throws CustomException {
 		if (B > ((N * N) / 4)) {
-			throw new CustomException("Bombs should be less than the quarter of the grid size");
+			throw new CustomException(ErrorCodes.TOO_MANY_BOMBS.getCode());
 		}
 	}
 
@@ -80,6 +96,9 @@ public class Grid {
 			int rowNumber = (int) Math.floor((Math.random()) * N);
 			int columnNumber = (int) Math.floor((Math.random()) * N);
 			Cell cell = cells[rowNumber][columnNumber];
+			if (cell.isBombPlaced()) {
+				continue;
+			}
 			incrementCountToBomb(rowNumber, columnNumber);
 			cell.isBombPlaced = true;
 			bombCount -= 1;
@@ -122,7 +141,8 @@ public class Grid {
 	public void validateMove(int row, int column) throws CustomException {
 
 		if (row >= N || row < 0 || column >= N || column < 0) {
-			throw new CustomException("Wrong row input"); // An exception has to extend exception class
+			throw new CustomException(ErrorCodes.INVALID_ROW_INPUT.getCode()); // An exception has to extend exception
+																				// class
 		}
 	}
 
@@ -133,7 +153,8 @@ public class Grid {
 	public void processCell(Cell cell) throws CustomException {
 
 		if (cell.getCellDisplayString() != Cell.DEFAULT_VALUE) {
-			throw new CustomException("Cell already choosen"); // An exception has to extend exception class
+			throw new CustomException(ErrorCodes.CELL_ALREADY_CHOOSEN.getCode()); // An exception has to extend
+																					// exception class
 		}
 		if (cell.isBombPlaced) {
 			processBombAction();
@@ -152,7 +173,7 @@ public class Grid {
 
 	public void processBombAction() {
 
-		System.out.println("Game over !!!! ");
+		System.out.println(Constants.GAME_OVER);
 		displayRealBoard();
 		System.exit(0);
 	}

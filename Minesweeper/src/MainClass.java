@@ -3,11 +3,15 @@ import java.util.Scanner;
 import com.java.component.Grid;
 import com.java.component.common.CustomException;
 
+/**
+ * @author akshitgupta
+ *
+ */
 public class MainClass {
 //if Integer is null, then setting int with Integer will give NPE
 	public static void main(String args[]) {
 		Scanner ak = new Scanner(System.in);
-		System.out.println("Enter the grid size");
+		System.out.println("Enter the Grid size");
 		Integer N = Integer.parseInt(ak.nextLine());
 		System.out.println("Enter the number of bombs");
 		Integer B = Integer.parseInt(ak.nextLine());
